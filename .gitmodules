@@ -1,0 +1,4 @@
+[submodule "models/maptr/external/MapTR"]
+	path = models/maptr/external/MapTR
+	url = https://github.com/hustvl/MapTR.git
+	branch = maptrv2
