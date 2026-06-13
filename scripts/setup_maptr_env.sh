@@ -340,6 +340,8 @@ if [ -f "requirement.txt" ]; then
         echo "[WARN] Failed to install requirement.txt with --no-deps."
         echo "[WARN] Continue because core dependencies were installed manually."
     }
+    echo "[INFO] Installing av2 runtime dependency required for import upath..."
+    pip install "universal-pathlib<0.3"
 else
     echo "[WARN] requirement.txt not found. Skipping."
 fi
