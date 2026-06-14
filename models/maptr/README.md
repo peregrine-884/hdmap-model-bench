@@ -98,7 +98,7 @@ scripts/evaluate.py
 公式 MapTR の `tools/train.py` と `tools/test.py` を呼び出す薄い launcher です。vendored MapTR checkout を cwd / PYTHONPATH に設定し、引数は公式 script へ渡します。
 
 ```text
-scripts/setup_env.sh
+../../../../scripts/setup_maptr_env.sh
 ```
 
 MapTR の公式実行環境を作る bash script です。conda env、PyTorch、MMCV、mmdet/mmdet3d、`nuscenes-devkit` などをまとめて install します。
@@ -298,37 +298,15 @@ predictor = module.MapTRPredictor(
 先に MapTR 実行環境を作ります。
 
 ```bash
-bash repos/hdmap-model-bench/models/maptr/scripts/setup_env.sh
+bash scripts/setup_maptr_env.sh
 conda activate maptr
 ```
 
 デフォルトは公式手順に合わせて `Python 3.8`, `torch==1.9.1+cu111`, `mmcv-full==1.4.0` を使います。
 
-CPU 環境で作る場合:
+`mmdetection3d` の CUDA extension build で `/usr/include/c++/11/... std_function.h` のようなエラーが出る場合は、system GCC 11 を使っていることが原因になりやすいです。workspace の `scripts/setup_maptr_env.sh` はデフォルトで conda env 内に GCC/G++ 9 を入れ、`CC`, `CXX`, `CUDAHOSTCXX` をその compiler に向けて build します。
 
-```bash
-MAPTR_CUDA=cpu bash repos/hdmap-model-bench/models/maptr/scripts/setup_env.sh
-```
-
-`mmdetection3d` の CUDA extension build で `/usr/include/c++/11/... std_function.h` のようなエラーが出る場合は、system GCC 11 を使っていることが原因になりやすいです。`setup_env.sh` はデフォルトで conda env 内に GCC/G++ 9 を入れ、`CC`, `CXX`, `CUDAHOSTCXX` をその compiler に向けて build します。
-
-compiler version を変える場合:
-
-```bash
-MAPTR_COMPILER_VERSION=9 bash repos/hdmap-model-bench/models/maptr/scripts/setup_env.sh
-```
-
-`cuda_runtime.h` / `cuda_runtime_api.h` が見つからない場合は、CUDA toolkit の include path が build に渡っていません。`setup_env.sh` は `/usr/local/cuda` と `/usr` を自動検出しますが、明示したい場合は次のように指定します。
-
-```bash
-MAPTR_CUDA_HOME=/usr bash repos/hdmap-model-bench/models/maptr/scripts/setup_env.sh
-```
-
-既存の Python 環境に install する場合:
-
-```bash
-MAPTR_SKIP_CONDA=1 bash repos/hdmap-model-bench/models/maptr/scripts/setup_env.sh
-```
+`cuda_runtime.h` / `cuda_runtime_api.h` が見つからない場合は、CUDA toolkit の include path が build に渡っていません。workspace の `scripts/setup_maptr_env.sh` は `nvcc` が `PATH` から見えることを前提にしています。
 
 既存環境を使う場合は、`gcc` / `g++` が CUDA と互換のある version を向いているか確認してください。Ubuntu 22.04 の system GCC 11 は古い MapTR / mmdet3d / CUDA extension build では失敗することがあります。
 
