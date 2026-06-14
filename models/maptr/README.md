@@ -98,7 +98,7 @@ scripts/evaluate.py
 公式 MapTR の `tools/train.py` と `tools/test.py` を呼び出す薄い launcher です。vendored MapTR checkout を cwd / PYTHONPATH に設定し、引数は公式 script へ渡します。
 
 ```text
-../../../../scripts/setup_maptr_env.sh
+../../../../scripts/env/setup_maptr.sh
 ```
 
 MapTR の公式実行環境を作る bash script です。conda env、PyTorch、MMCV、mmdet/mmdet3d、`nuscenes-devkit` などをまとめて install します。
@@ -298,15 +298,15 @@ predictor = module.MapTRPredictor(
 先に MapTR 実行環境を作ります。
 
 ```bash
-bash scripts/setup_maptr_env.sh
+bash scripts/env/setup_maptr.sh
 conda activate maptr
 ```
 
 デフォルトは公式手順に合わせて `Python 3.8`, `torch==1.9.1+cu111`, `mmcv-full==1.4.0` を使います。
 
-`mmdetection3d` の CUDA extension build で `/usr/include/c++/11/... std_function.h` のようなエラーが出る場合は、system GCC 11 を使っていることが原因になりやすいです。workspace の `scripts/setup_maptr_env.sh` はデフォルトで conda env 内に GCC/G++ 9 を入れ、`CC`, `CXX`, `CUDAHOSTCXX` をその compiler に向けて build します。
+`mmdetection3d` の CUDA extension build で `/usr/include/c++/11/... std_function.h` のようなエラーが出る場合は、system GCC 11 を使っていることが原因になりやすいです。workspace の `scripts/env/setup_maptr.sh` はデフォルトで conda env 内に GCC/G++ 9 を入れ、`CC`, `CXX`, `CUDAHOSTCXX` をその compiler に向けて build します。
 
-`cuda_runtime.h` / `cuda_runtime_api.h` が見つからない場合は、CUDA toolkit の include path が build に渡っていません。workspace の `scripts/setup_maptr_env.sh` は `nvcc` が `PATH` から見えることを前提にしています。
+`cuda_runtime.h` / `cuda_runtime_api.h` が見つからない場合は、CUDA toolkit の include path が build に渡っていません。workspace の `scripts/env/setup_maptr.sh` は `nvcc` が `PATH` から見えることを前提にしています。
 
 既存環境を使う場合は、`gcc` / `g++` が CUDA と互換のある version を向いているか確認してください。Ubuntu 22.04 の system GCC 11 は古い MapTR / mmdet3d / CUDA extension build では失敗することがあります。
 
